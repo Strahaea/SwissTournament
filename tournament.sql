@@ -3,9 +3,15 @@
 -- Put your SQL 'create table' statements in this file; also 'create view'
 -- statements if you choose to use it.
 --
-create table ranking (
+create table players(
 	id serial,
-	ranking int); 
+	player_name text,
+	ranking integer);
+	
+create table matches(
+	player1 text,
+	player2 text,
+	outcome text);
 
 
 
