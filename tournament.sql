@@ -9,9 +9,8 @@ create table players(
 	ranking integer);
 	
 create table matches(
-	player1 text,
-	player2 text,
-	outcome text);
+	winner text,
+	loser text);
 
 
 
