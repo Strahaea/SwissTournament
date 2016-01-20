@@ -23,7 +23,7 @@ def deletePlayers():
     """Remove all the player records from the database."""
     DB = connect()
     c = DB.cursor()
-    c.execute("delete from matches *;")
+    c.execute("delete from players *;")
     DB.commit()
     DB.close()
 
