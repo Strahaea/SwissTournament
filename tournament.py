@@ -65,7 +65,32 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
+    DB = connect()
+    c = DB.cursor()
+    c.execute("drop view if exists for_wins;") #drop old view tables if any
+    c.execute("drop view if exists for_matches;")
+    #create views to keep track of wins
+    c.execute("\
+    create view for_wins as select players.player_name, players.id,\
+    count(matches.winner) as wins from players left join matches\
+    on matches.winner = players.id\
+    group by players.player_name, players.id;")
+    #create view to keep track of matches
+    c.execute("\
+    create view for_matches as select players.player_name, players.id,\
+    count(matches.winner) as matches from players left join matches\
+    on matches.winner = players.id or\
+    matches.loser = players.id\
+    group by players.player_name, players.id;")
+    #join the views so we have player_name, wins, and matches in one table
+    c.execute("\
+    select for_wins.id, for_wins.player_name, for_wins.wins, for_matches.matches\
+    from for_wins, for_matches where for_wins.player_name =\
+    for_matches.player_name order by for_wins.wins;")
+    lists = c.fetchall()
+    DB.commit()
+    DB.close()
+    return lists
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -74,7 +99,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
+    DB = connect()
+    c = DB.cursor()
+    c.execute("insert into matches (winner, loser) values (%s);", (winner, loser))
+    DB.commit()
+    DB.close()
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
