@@ -67,26 +67,7 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("drop view if exists for_wins;") #drop old view tables if any
-    c.execute("drop view if exists for_matches;")
-    #create views to keep track of wins
-    c.execute("\
-    create view for_wins as select players.name, players.id,\
-    count(matches.winner) as wins from players left join matches\
-    on matches.winner = players.id\
-    group by players.name, players.id;")
-    #create view to keep track of matches
-    c.execute("\
-    create view for_matches as select players.name, players.id,\
-    count(matches.winner) as matches from players left join matches\
-    on matches.winner = players.id or\
-    matches.loser = players.id\
-    group by players.name, players.id;")
-    #join the views so we have player_name, wins, and matches in one table
-    c.execute("\
-    select for_wins.id, for_wins.name, for_wins.wins, for_matches.matches\
-    from for_wins, for_matches where for_wins.name =\
-    for_matches.name order by for_wins.wins;")
+    c.execute("select * from player_standings;")
     lists = c.fetchall()
     DB.commit()
     DB.close()
@@ -120,5 +101,6 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    
 
 
