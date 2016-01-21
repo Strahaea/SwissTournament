@@ -48,7 +48,7 @@ def registerPlayer(name):
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("insert into players (player_name) values (%s)", (name,));
+    c.execute("insert into players (name) values (%s)", (name,));
     DB.commit()
     DB.close()
 
@@ -71,22 +71,22 @@ def playerStandings():
     c.execute("drop view if exists for_matches;")
     #create views to keep track of wins
     c.execute("\
-    create view for_wins as select players.player_name, players.id,\
+    create view for_wins as select players.name, players.id,\
     count(matches.winner) as wins from players left join matches\
     on matches.winner = players.id\
-    group by players.player_name, players.id;")
+    group by players.name, players.id;")
     #create view to keep track of matches
     c.execute("\
-    create view for_matches as select players.player_name, players.id,\
+    create view for_matches as select players.name, players.id,\
     count(matches.winner) as matches from players left join matches\
     on matches.winner = players.id or\
     matches.loser = players.id\
-    group by players.player_name, players.id;")
+    group by players.name, players.id;")
     #join the views so we have player_name, wins, and matches in one table
     c.execute("\
-    select for_wins.id, for_wins.player_name, for_wins.wins, for_matches.matches\
-    from for_wins, for_matches where for_wins.player_name =\
-    for_matches.player_name order by for_wins.wins;")
+    select for_wins.id, for_wins.name, for_wins.wins, for_matches.matches\
+    from for_wins, for_matches where for_wins.name =\
+    for_matches.name order by for_wins.wins;")
     lists = c.fetchall()
     DB.commit()
     DB.close()
@@ -101,7 +101,7 @@ def reportMatch(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("insert into matches (winner, loser) values (%s);", (winner, loser))
+    c.execute("insert into matches (winner, loser) values (%s, %s)", (winner, loser,));
     DB.commit()
     DB.close()
  

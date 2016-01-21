@@ -4,8 +4,8 @@
 -- statements if you choose to use it.
 --
 create table players(
-	id serial,
-	player_name text,
+	id serial primary key,
+	name text,
 	ranking integer);
 	
 create table matches(
