@@ -26,6 +26,6 @@ group by players.name, players.id;
 -- join the views so we have player_name, wins, and matches in one table
 
 create view player_standings as select for_wins.id, for_wins.name, for_wins.wins, for_matches.matches 
-from for_wins, for_matches where for_wins.name = for_matches.name order by for_wins.wins;
+from for_wins, for_matches where for_wins.name = for_matches.name order by for_wins.wins desc;
 
 

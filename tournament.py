@@ -101,6 +101,14 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    
+    standings = playerStandings() #will give us a list with most of what we need
+    pairings = []
+    while len(standings) > 0: #when standings has nothing in it all the contestants have been paired
+        member1 = standings[0][:2] #this gets us what we need of the first member
+        member2 = standings[1][:2]
+        standings = standings[2:] #join the 2 members
+        pair = member1 + member2
+        pairings.append(pair)
+    return pairings
 
 
